@@ -5,13 +5,17 @@ const app = express();
 const prueba = new ProductManager("./src/archivos/ProductList.json");
 
 app.get("/products", async (req, res) => {
-    const limite = req.query.limit;
-    let obj = {productos : await prueba.getProducts()};
-    
-    if(limite){
-        obj.productos = obj.productos.filter(e => e.id < limite)
-    }
+    const limite = req.query.limit, aux = await prueba.getProducts();
+    const obj = {productos: []};
 
+    if(limite<aux.length){
+        for (let i = 0; i < limite; i++) {
+            obj.productos.push(aux[i]);
+        }
+    } else {
+        obj.productos = aux;
+    } 
+    
     res.send(obj)
 })
 
